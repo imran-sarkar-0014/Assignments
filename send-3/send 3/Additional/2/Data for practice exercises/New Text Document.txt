@@ -1,0 +1,20 @@
+Practice exercises for next week
+Task 1.
+
+In this exercise, you have to work with a data of past and current employees of a company ('HR_data.csv'). Your task is to build a classification model to predict which employee will leave the company and which will continue working (the target column is 'left'). You can find more details about the data from https://www.kaggle.com/mfaisalqureshi/hr-analytics-and-job-prediction.
+
+As the first step, transform all the categorical columns into numeric (columns 'department' and 'salary').
+Build a logistic regression model by first create a training set and test set, with test size = 0.20 (set random state to be 0), and after building a model, evaluate predictions for both the test and training sets.
+In particular check the difference of accuracy for the training and test; do you see a result that you would expect there?
+Then perform cross-validation with cv = 5 and scoring = 'accuracy'. What is the minimum and maximum score you observe after building the models?
+Task 2.
+
+In this exercise you have to work with the data in the file 'ItalianWineSamples.csv', that
+contains 13 chemical measurements on 178 Italian wine samples. More information about the data can be found here: https://archive.ics.uci.edu/ml/datasets/wine
+
+Your task is to perform K-Means clustering to the dataset; in the model building process, do not use the column 'Type'. After scaling the variables, determine the optimal number of clusters using the elbow-method introduced in the course, and then perform the K-Means analysis using the optimal cluster number you determined (set random state= 0). Based on the results, answer the following questions:
+
+How many observations are there in each cluster?
+What is the average of each variable in each cluster (the original, not the scaled variables)?
+Can you identify some variables that clearly have different average values for each cluster?
+Compare your K-Means Clustering solution with the 'Type' variable, which describes the wine varietal each wine sample belongs to out of three possible types. If you consider the created clusters, do any of them correspond to one of the categories in Type (i.e., most of the wines belonging to the cluster have the same Type), or are the clusters just a mix of all the categories in Type?

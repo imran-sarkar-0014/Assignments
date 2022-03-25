@@ -1,0 +1,16 @@
+Task 1.
+
+In this exercise, you will perform tasks faced by a data scientist working in the real estate
+industry. Your job is to build a predictive model to estimate selling price for houses. You can find more details about the dataset (Housing.csv), including an explanation of the variables from httpswww.kaggle.commssmartypantsparis-housing-price-prediction
+You need to perform the following tasks
+
+Exploratory data analysis try to understand the different variables in the data. Identify the variables, based on exploratory data analysis methods, that you think have an effect on the price of the house
+Develop a regression model that the company can use to predict the selling price for new houses on the market. The model should contain only the variables that were found as potentially important in the previous step.
+Task 2.
+
+In this exercise, you will have to analyze a dataset (haberman.csv) that contains cases from
+a study that was conducted between 1958 and 1970 at the University of Chicago's Billings Hospital on patients who had undergone surgery for breast cancer. The task is to determine if the patient survived 5 years or longer (positive) or if the patient died within 5 years (negative). There are three predictor variables (Age, Year of the operation and Number of positive axillary nodes detected, that typically capture how serious the cancer was).
+
+Build a logistic regression classification model using all the three predictor variables (Age, Year of operation, Number of positive axillary nodes detected). Divide the data set into training (70 %) and test set (30 %), use random state = 0, and follow the process of building a classification model as discussed in the course.
+Create the confusion matrix, calculate classification performance measures, and check the accuracy for the test set.
+Perform the previous steps but now using only the two variables Age, and Number of positive axillary nodes detected. How did the accuracy of the model on the test set change Based on this, do you think Year is an important predictor variable

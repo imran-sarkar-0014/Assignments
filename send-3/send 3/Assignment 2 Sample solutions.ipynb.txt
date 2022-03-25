@@ -1,0 +1,414 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "51bfb983",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Libraries\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "from scipy import stats"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "90a7f050",
+   "metadata": {},
+   "source": [
+    "#### Task 1."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "3e37e26d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "insurance = pd.read_csv('insurance.csv')\n",
+    "insurance.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f38170a3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Region with highest total charges\n",
+    "insurance[['region', 'charges']].groupby('region').sum().sort_values('charges', ascending = False).iloc[[0]]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "21a19e76",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Pivot of gender and children\n",
+    "insurance.pivot_table(['charges'],index=['gender', 'children'], margins=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "206ca239",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Smoker and charges\n",
+    "print(insurance.groupby(['smoker']).charges.mean())\n",
+    "charge_smoke = insurance[insurance.smoker == 'yes'].charges\n",
+    "charge_no_smoke = insurance[insurance.smoker == 'no'].charges\n",
+    "stats.ttest_ind(charge_smoke,charge_no_smoke)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cc9b8f7a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# correlation per region\n",
+    "insurance[['age', 'charges', 'region']].groupby(['region']).corr()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "22b2f097",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# bmi and charges\n",
+    "insurance['bmi_category'] = (insurance.bmi > 18) & (insurance.bmi < 25)\n",
+    "print(insurance.groupby(['bmi_category']).charges.mean())\n",
+    "charge_ok_bmi = insurance[insurance.bmi_category == True].charges\n",
+    "charge_no_bmi = insurance[insurance.bmi_category == False].charges\n",
+    "stats.ttest_ind(charge_ok_bmi,charge_no_bmi)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ff0bcc55",
+   "metadata": {},
+   "source": [
+    "### Task 2."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "39b9305b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Loading and combining data\n",
+    "data_1 = pd.read_csv('marketing_demographics.csv')\n",
+    "data_2 = pd.read_csv('marketing_business.csv')\n",
+    "data = data_1.merge(data_2)\n",
+    "data.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "329e7a65",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# You may want to remove outliers from income\n",
+    "cut_off = data['Income'].quantile(0.99)\n",
+    "data = data[data['Income'] < cut_off]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "426c039a",
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [],
+   "source": [
+    "# Income and campaign relationship\n",
+    "sns.catplot(x=\"Accepted_Campaigns\", y =\"Income\", data=data, kind=\"box\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "51fa10a9",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Income and response\n",
+    "sns.catplot(x=\"Response\", y =\"Income\", data=data, kind=\"box\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "72b662ce",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Country and amount\n",
+    "sns.catplot(x=\"Country\", y =\"Total_Amount\", data=data, kind=\"box\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "6acee39a",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Country and purchase\n",
+    "sns.catplot(x=\"Country\", y =\"Total_Purchase\", data=data, kind=\"box\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9eba4b06",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Relationship between Income and amount\n",
+    "sns.relplot(x=\"Income\", y=\"Total_Amount\", data=data, kind=\"scatter\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "74d00375",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Relationship between Income and purchases\n",
+    "sns.relplot(x=\"Income\", y=\"Total_Purchase\", data=data, kind=\"scatter\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "58bfe1c5",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Total amount and response\n",
+    "sns.catplot(x=\"Response\", y =\"Total_Amount\", data=data, kind=\"box\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ae26eeb4",
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Total purchase and response\n",
+    "sns.catplot(x=\"Response\", y =\"Total_Purchase\", data=data, kind=\"box\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "0f086ff3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Income and campaigns\n",
+    "print(data.groupby('Response').Income.mean())\n",
+    "print(data.groupby('Accepted_Campaigns').Income.mean())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "f206737c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Amount and countries\n",
+    "print(data.groupby('Country').Total_Amount.mean())\n",
+    "print(data.groupby('Country').Total_Purchase.mean())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "2972c6b3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Correlation\n",
+    "data[['Income', 'Total_Amount', 'Total_Purchase']].corr()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "7c2ce175",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Amount and campaigns\n",
+    "print(data.groupby('Response').Total_Amount.mean())\n",
+    "print(data.groupby('Accepted_Campaigns').Total_Amount.mean())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4aa2cacf",
+   "metadata": {},
+   "source": [
+    "### Task 3."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "694f342a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Data\n",
+    "insurance = pd.read_csv('insurance.csv')\n",
+    "print(insurance.shape)\n",
+    "insurance.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "67fb9180",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Remove outliers\n",
+    "\n",
+    "cut_off = insurance['charges'].quantile(0.98)\n",
+    "cut_off_low_bmi = insurance['bmi'].quantile(0.02)\n",
+    "cut_off_high_bmi = insurance['bmi'].quantile(0.98)\n",
+    "\n",
+    "insurance = insurance[insurance['charges'] < cut_off]\n",
+    "insurance = insurance[insurance['bmi'] < cut_off_high_bmi]\n",
+    "insurance = insurance[insurance['bmi'] > cut_off_low_bmi]\n",
+    "insurance.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "36af1bff",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dummy for region\n",
+    "insurance = pd.get_dummies(insurance, columns=['region'], drop_first=True, prefix='region')\n",
+    "insurance.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "b9e3474c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dummies for bmi\n",
+    "bins = [0, 18.5, 24.9, 30, 50]\n",
+    "\n",
+    "labels = ['Underweight', 'Healthy', 'Overweight', 'Obese']\n",
+    "\n",
+    "# Then we can create a new ctegorical variable\n",
+    "insurance['bmi_category'] = pd.cut(insurance['bmi'] , bins, labels = labels)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "e5c3bcec",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Children simplified\n",
+    "insurance['children_yes'] = insurance.children >0"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "d8cddf00",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Scaling\n",
+    "\n",
+    "from sklearn.preprocessing import StandardScaler\n",
+    "\n",
+    "data_standard_scaler = StandardScaler()\n",
+    "data_standard_scaler.fit(insurance[['age']])\n",
+    "insurance['age_scaled'] = data_standard_scaler.transform(insurance[['age']])\n",
+    "data_standard_scaler = StandardScaler()\n",
+    "data_standard_scaler.fit(insurance[['charges']])\n",
+    "insurance['charges_scaled'] = data_standard_scaler.transform(insurance[['charges']])\n",
+    "\n",
+    "insurance.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "edf02921",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.8"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
